@@ -1,0 +1,82 @@
+package com.mhdt.toolkit;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.function.Function;
+
+/**
+ * 集合工具类
+ * 
+ * <pre>
+ *
+ * &#64;author 懒得出风头
+ * Date: 2017年2月16日
+ * Time: 下午10:29:45
+ * </pre>
+ */
+public class Collections {
+
+	/**
+	 * 语法类似Mysql的limit操作.如果提取数量小于Count返回最大提取数.
+	 * 
+	 * @param collecttion
+	 *            - 数据源
+	 * @param start
+	 *            - 从第几个元素开始
+	 * @param count
+	 *            - 提取数量
+	 * @return Collection;取不到元素返回空的ArrayList
+	 */
+	public static <T> ArrayList<T> limit(Collection<T> collecttion, int start, int count) {
+		ArrayList<T> list = new ArrayList<T>();
+		// 判断获取不到直接返回空结果
+		if (collecttion == null || collecttion.isEmpty())
+			return list;
+
+		Iterator<T> it = collecttion.iterator();
+
+		for (int i = 0; i < collecttion.size() && it.hasNext(); i++) {
+			T t = it.next();
+			if (i < start)
+				continue;
+			if (count > 0 && list.size() == count)
+				break;
+			list.add(t);
+		}
+
+		return list;
+
+	}
+
+	public static String toString(Object[] array) {
+		StringBuilder sb = new StringBuilder();
+		for (Object t : array)
+			sb.append(t.toString() + "\n");
+		return sb.toString();
+	}
+
+	public static <T> String toString(Collection<T> list) {
+		StringBuilder sb = new StringBuilder();
+		for (T t : list)
+			sb.append(t.toString() + "\n");
+		
+		return sb.toString();
+	}
+
+	/**
+	 * Set rotation array。
+	 * @param cls
+	 * @param list
+	 * @param function
+	 * @return
+	 */
+	public static <T,R> R[] toArray(Class<R> cls,Collection<T> list,Function<T, R> function) {
+		List<R> result = new ArrayList<>();
+		list.forEach(it->{result.add(function.apply(it));});
+		return result.toArray(Reflect.newArray(cls, result.size()));
+	}
+	
+
+}
